@@ -1,0 +1,45 @@
+.banner-img-container {
+  position: relative;
+}
+.banner-btn {
+  position: absolute;
+  bottom: 3rem;
+  left: 3rem;
+}
+.video-list-container {
+  flex-wrap: wrap;
+}
+.video-meta-text {
+  margin-left: 5px;
+}
+
+.video-container {
+  width: 14rem;
+  object-fit: cover;
+}
+.video-container img {
+  width: 100%;
+}
+.video-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.video-channel-name,
+.video-views,
+.video-age {
+  font-size: 0.8rem;
+}
+.video-meta-info {
+  color: var(--grey);
+  gap: 4px;
+  margin-top: 3px;
+}
+.action-menu {
+  margin-right: 3px;
+}

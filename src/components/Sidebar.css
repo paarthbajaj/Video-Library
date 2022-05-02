@@ -1,0 +1,7 @@
+.vl-sidebar {
+  padding: 2rem;
+  position: fixed;
+}
+.vl-sidebar a {
+  color: var(--black);
+}

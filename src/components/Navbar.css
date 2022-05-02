@@ -1,0 +1,65 @@
+.desktop-header-container {
+  top: 0;
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 9;
+  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);
+  height: 4rem;
+  background-color: var(--blue-shade1);
+  align-items: center;
+  color: var(--white);
+}
+.logo-container {
+  margin-left: 3%;
+  flex: 0 1 auto;
+}
+.brand-logo {
+  color: var(--white);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+.input-search-bar {
+  font-size: 0.875rem;
+  color: var(--black);
+  padding: 0.5rem 0.625rem 0.625rem;
+  margin: 0;
+  outline: 0;
+  border: 1px solid var(--white);
+  border-radius: 0 0.25rem 0.25rem 0;
+  border-left: 0;
+  background: var(--white);
+  width: 95%;
+}
+.action-user {
+  border: 1px solid var(--white);
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+}
+.search-icon {
+  text-align: center;
+  padding: 0.5rem 0.5rem 0.625rem;
+  background: var(--white);
+  border: 1px solid var(--gray-shade1);
+  border-right: none;
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+.fa-search {
+  color: var(--gray-shade2);
+}
+.search-bar {
+  flex: 1 0 auto;
+  margin-left: 20%;
+}
+.header-actions {
+  flex: 1 1 auto;
+  margin-right: 3%;
+  justify-content: flex-end;
+}
+.header-actions a {
+  color: var(--white);
+}

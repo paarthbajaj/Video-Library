@@ -1,51 +1,30 @@
-.App {
-  text-align: center;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-size: large;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root {
+  --blue-shade1: #04009a;
+  --blue-shade2: #77acf1;
+  --blue-shade3: #3edbf0;
+  --blue-shade4: #c0fefc;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.app-body {
+  margin-top: 4.1rem;
 }
-
-.App-header {
-  background-color: #22201c;
+.vl-pri-btn {
+  background-color: var(--blue-shade1);
+  color: var(--white);
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+}
+.vl-page-container {
+  margin-left: 20vw;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-.brand-title {
-  font-size: 3rem;
-  color: #d9d9d9;
-}
-
-.brand-title span {
-  color: #ffde59;
-}
-
-.brand-description {
-  font-size: 1.4rem;
-}
-
-.links {
-  display: flex;
-}
-
-.links a {
-  color: #d9d9d9;
-  font-size: 1.2rem;
-  margin: 1rem;
-}
+@import url(https://patched-ui.netlify.app/utility-classes.css);

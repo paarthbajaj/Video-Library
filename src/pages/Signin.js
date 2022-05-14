@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 export const Signin = () => {
+  const { signInAsGuest } = useAuth();
   return (
     <div className="signin-page">
       <img
@@ -36,14 +38,16 @@ export const Signin = () => {
             number and one special character
           </span>
         </label>
-        <Link to="/">
+        <Link to="/home">
           <button className="vl-pri-btn" type="submit">
             Sign In
           </button>
         </Link>
-        {/* <Link to="/home"> */}
-        <span>Sign In As Guest</span>
-        {/* </Link> */}
+        <Link to="/home">
+          <span className="cursor-pointer" onClick={signInAsGuest}>
+            Sign In As Guest
+          </span>
+        </Link>
         <span className="or-divider">OR</span>
         <Link to="/signup">
           <button type="button" className="btn btn-secondary">

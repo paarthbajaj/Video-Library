@@ -1,5 +1,7 @@
+import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 export const Signup = () => {
+  const { signupClickHandler, authDispatch } = useAuth();
   return (
     <div className="signin-page">
       <img
@@ -15,6 +17,9 @@ export const Signup = () => {
             type="text"
             placeholder="Name"
             required
+            onChange={(e) =>
+              authDispatch({ type: "EDIT_NAME", payload: e.target.value })
+            }
           />
           <span className="error">Please enter your name</span>
         </label>
@@ -24,6 +29,9 @@ export const Signup = () => {
             type="email"
             placeholder="Email"
             required
+            onChange={(e) =>
+              authDispatch({ type: "EDIT_EMAIL", payload: e.target.value })
+            }
           />
           <span className="error">Please enter your email</span>
         </label>
@@ -34,6 +42,9 @@ export const Signup = () => {
             placeholder="Password"
             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
+            onChange={(e) =>
+              authDispatch({ type: "EDIT_PASSWORD", payload: e.target.value })
+            }
           />
           <span className="error">
             Password must contain eight characters, at least one letter, one
@@ -47,13 +58,23 @@ export const Signup = () => {
             placeholder="Confirm Password"
             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
+            onChange={(e) =>
+              authDispatch({
+                type: "EDIT_CONFIRM_PASSWORD",
+                payload: e.target.value,
+              })
+            }
           />
           <span className="error">
             Password must contain eight characters, at least one letter, one
             number and one special character
           </span>
         </label>
-        <button className="vl-pri-btn" type="submit">
+        <button
+          className="vl-pri-btn"
+          type="submit"
+          onClick={signupClickHandler}
+        >
           Sign Up
         </button>
         <span className="or-divider">OR</span>

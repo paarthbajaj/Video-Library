@@ -12,7 +12,12 @@
 .video-meta-text {
   margin-left: 5px;
 }
-
+.channel-thumbnail {
+  min-height: 2.3rem;
+  min-width: 2.3rem;
+  max-height: 2.3rem;
+  max-width: 2.3rem;
+}
 .video-container {
   width: 14rem;
   object-fit: cover;
@@ -41,5 +46,37 @@
   margin-top: 3px;
 }
 .action-menu {
-  margin-right: 3px;
+  padding: 0 4px;
+  position: relative;
+}
+.action-menu-options {
+  background-color: var(--blue-shade5);
+  position: absolute;
+  padding: 0.5rem 0;
+  right: 0px;
+  width: 12rem;
+  border-radius: 3px;
+}
+.action-option-block {
+  padding: 0.4rem 0.8rem;
+}
+.action-option {
+  padding-right: 0.5rem;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+.popup-container {
+  background-color: var(--white);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 12px;
 }

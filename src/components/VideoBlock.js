@@ -25,7 +25,6 @@ export const VideoBlock = ({ video }) => {
               <span className="video-age">{published_on}</span>
             </div>
           </div>
-          {/* <i className="far fa-ellipsis-v action-menu"></i> */}
           <ActionMenu
             showActionMenu={showActionMenu}
             setShowActionMenu={setShowActionMenu}

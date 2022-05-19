@@ -7,6 +7,8 @@ import { History } from "./components/History";
 import { WatchLater } from "./components/WatchLater";
 import { Signin } from "./pages/Signin";
 import { Signup } from "./pages/Signup";
+import { Playlists } from "./components/Playlists";
+import { SingleVideoPage } from "./components/SingleVideoPage";
 
 function App() {
   return (
@@ -16,8 +18,10 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/history" element={<History />} />
         <Route path="/watch-later" element={<WatchLater />} />
+        <Route path="/playlists" element={<Playlists />} />
         <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/watch" element={<SingleVideoPage />} />
       </Routes>
     </div>
   );

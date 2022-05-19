@@ -1,13 +1,27 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useVideo } from "../context/VideoContext";
 import { ActionMenu } from "./ActionMenu";
 
 export const VideoBlock = ({ video }) => {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const { thumbnail, title, views, creator, published_on } = video;
+  const { videoDispatch } = useVideo();
+  let navigate = useNavigate();
   return (
     <>
-      <div className="video-container cursor-pointer">
-        <img src={thumbnail} alt={title} loading="lazy" />
+      <div
+        className="video-container cursor-pointer"
+        onClick={() =>
+          videoDispatch({ type: "SELECTED_VIDEO", payload: video })
+        }
+      >
+        <img
+          src={thumbnail}
+          alt={title}
+          loading="lazy"
+          onClick={() => navigate("/watch")}
+        />
         <div className="flex-row">
           <div className="channel-thumbnail">
             <img

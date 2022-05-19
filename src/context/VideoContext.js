@@ -8,6 +8,10 @@ const VideoContextProvider = ({ children }) => {
     switch (action.type) {
       case "FETCH_VIDEOS":
         return { ...state, listOfVideos: action.payload };
+      case "SELECTED_VIDEO":
+        return { ...state, selectedVideo: action.payload };
+      case "SET_SELECTED_PLAYLIST":
+        return { ...state, selectedPlaylist: action.payload };
       case "WATCH_LATER_LIST":
         return { ...state, watchLaterList: action.payload };
       case "CREATE_PLAYLIST":
@@ -24,6 +28,8 @@ const VideoContextProvider = ({ children }) => {
   };
   const initialState = {
     listOfVideos: [],
+    selectedVideo: {},
+    selectedPlaylist: {},
     watchLaterList: [],
     showPlaylistPopup: false,
     showCreatePlaylistBlock: false,
@@ -40,6 +46,7 @@ const VideoContextProvider = ({ children }) => {
       }
     })();
   }, []);
+  console.log(encodedToken);
   const getWatchLaterApi = async () => {
     try {
       const { data } = await axios.get("/api/user/watchlater", {
@@ -50,10 +57,22 @@ const VideoContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+  console.log(encodedToken);
+  const getPlaylists = async () => {
+    try {
+      const { data } = await axios.get("/api/user/playlists", {
+        headers: { authorization: encodedToken },
+      });
+      console.log(data);
+      videoDispatch({ type: "CREATE_PLAYLIST", payload: data.playlists });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <VideoContext.Provider
-      value={{ videoState, videoDispatch, getWatchLaterApi }}
+      value={{ videoState, videoDispatch, getWatchLaterApi, getPlaylists }}
     >
       {children}
     </VideoContext.Provider>

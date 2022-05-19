@@ -1,5 +1,6 @@
 import { addToWatchLater } from "../backend/utils/serviceUtil";
 import { useVideo } from "../context/VideoContext";
+import { PlaylistPopup } from "./AddToPlaylistPopup";
 
 export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
   const { videoState, videoDispatch } = useVideo();
@@ -7,7 +8,9 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
     <div className="action-menu cursor-pointer">
       <i
         className="far fa-ellipsis-v"
-        onClick={() => setShowActionMenu((prev) => !prev)}
+        onClick={(e) => {
+          setShowActionMenu((prev) => !prev);
+        }}
       ></i>
       {showActionMenu && (
         <div className="action-menu-options">

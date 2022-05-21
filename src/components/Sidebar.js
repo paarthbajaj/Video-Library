@@ -16,10 +16,12 @@ export const Sidebar = () => {
           <span className="pl-3-4 ">History</span>
         </div>
       </Link>
-      <div className="pb-1 cursor-pointer">
-        <i className="fal fa-stream"></i>
-        <span className="pl-3-4 ">Playlist</span>
-      </div>
+      <Link to="/playlists">
+        <div className="pb-1 cursor-pointer">
+          <i className="fal fa-stream"></i>
+          <span className="pl-3-4 ">Playlist</span>
+        </div>
+      </Link>
       <Link to="/watch-later">
         <div className="pb-1 cursor-pointer">
           <i className="fal fa-clock"></i>

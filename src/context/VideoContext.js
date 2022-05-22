@@ -16,6 +16,21 @@ const VideoContextProvider = ({ children }) => {
         return { ...state, watchLaterList: action.payload };
       case "CREATE_PLAYLIST":
         return { ...state, listOfPlaylist: action.payload };
+      case "SET_LIKED_VIDEOS":
+        return { ...state, likedVideos: action.payload };
+      case "SET_WATCH_HISTORY":
+        return { ...state, watchHistory: action.payload };
+      case "DELETE_FROM_HISTORY":
+        return {
+          ...state,
+          watchHistory: state.watchHistory.filter(
+            (i) => i._id !== action.payload
+          ),
+        };
+      case "DELETE_ALL_HISTORY":
+        return { ...state, watchHistory: [] };
+      case "DELETE_PLAYLIST":
+        return { ...state, listOfPlaylist: [] };
       case "SHOW_PLAYLIST_POPUP":
         return { ...state, showPlaylistPopup: true };
       case "CLOSE_PLAYLIST_POPUP":
@@ -34,6 +49,8 @@ const VideoContextProvider = ({ children }) => {
     showPlaylistPopup: false,
     showCreatePlaylistBlock: false,
     listOfPlaylist: [],
+    likedVideos: [],
+    watchHistory: [],
   };
   const [videoState, videoDispatch] = useReducer(videoReducer, initialState);
   useEffect(() => {
@@ -69,10 +86,39 @@ const VideoContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+  const getLikedVideos = async () => {
+    try {
+      const { data } = await axios.get("/api/user/likes", {
+        headers: { authorization: encodedToken },
+      });
+      console.log(data);
+      videoDispatch({ type: "SET_LIKED_VIDEOS", payload: data.likes });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getWatchHistory = async () => {
+    try {
+      const { data } = await axios.get("/api/user/history", {
+        headers: { authorization: encodedToken },
+      });
+      console.log(data);
+      videoDispatch({ type: "SET_WATCH_HISTORY", payload: data.history });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <VideoContext.Provider
-      value={{ videoState, videoDispatch, getWatchLaterApi, getPlaylists }}
+      value={{
+        videoState,
+        videoDispatch,
+        getWatchLaterApi,
+        getPlaylists,
+        getLikedVideos,
+        getWatchHistory,
+      }}
     >
       {children}
     </VideoContext.Provider>

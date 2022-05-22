@@ -1,5 +1,8 @@
 import axios from "axios";
 const encodedToken = localStorage.getItem("key");
+{
+  console.log(encodedToken);
+}
 
 export const addToWatchLater = async (videoObj) => {
   try {
@@ -78,6 +81,92 @@ export const addVideoToPlaylist = async (playlistId, videoObj) => {
 export const getSelectedPlaylistVideos = async (selectedPlaylistId) => {
   try {
     const data = await axios.get(`/api/user/playlists/${selectedPlaylistId}`, {
+      headers: {
+        authorization: encodedToken,
+      },
+    });
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addToLikedVideos = async (videoObj) => {
+  try {
+    const data = await axios.post(
+      "/api/user/likes",
+      {
+        video: videoObj,
+      },
+      {
+        headers: {
+          authorization: encodedToken,
+        },
+      }
+    );
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addToWatchHistory = async (videoObj) => {
+  try {
+    const data = await axios.post(
+      "/api/user/history",
+      {
+        video: videoObj,
+      },
+      {
+        headers: {
+          authorization: encodedToken,
+        },
+      }
+    );
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const delVideoFromHistory = async (videoId) => {
+  try {
+    const data = await axios.delete(`/api/user/history/${videoId}`, {
+      headers: {
+        authorization: encodedToken,
+      },
+    });
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const delAllWatchHistory = async () => {
+  try {
+    const data = await axios.delete("/api/user/history/all", {
+      headers: {
+        authorization: encodedToken,
+      },
+    });
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const deletePlaylist = async (playlistId) => {
+  try {
+    const data = await axios.delete(`/api/user/playlists/${playlistId}`, {
+      headers: {
+        authorization: encodedToken,
+      },
+    });
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const removeFromWatchLater = async (videoId) => {
+  try {
+    const data = await axios.delete(`/api/user/watchlater/${videoId}`, {
       headers: {
         authorization: encodedToken,
       },

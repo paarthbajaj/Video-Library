@@ -26,6 +26,6 @@
 }
 .vl-page-container {
   margin-left: 20vw;
-  min-height: 100vh;
+  min-height: 80vh;
 }
 @import url(https://patched-ui.netlify.app/utility-classes.css);

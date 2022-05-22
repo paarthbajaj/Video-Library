@@ -28,6 +28,12 @@ export const Sidebar = () => {
           <span className="pl-3-4 ">Watch Later</span>
         </div>
       </Link>
+      <Link to="/liked-videos">
+        <div className="pb-1 cursor-pointer">
+          <i className="fal fa-thumbs-up"></i>
+          <span className="pl-3-4 ">Liked Videos</span>
+        </div>
+      </Link>
     </aside>
   );
 };

@@ -1,0 +1,33 @@
+.video-block {
+  width: 95%;
+}
+.single-video-info .fa-thumbs-up {
+  padding-right: 0.5rem;
+}
+.single-video-description {
+  padding-top: 12px;
+}
+.history-vd-container img {
+  width: 20%;
+}
+.vd-add-info {
+  font-size: small;
+  color: var(--grey);
+}
+.history-vd-txt-info {
+  flex: 3;
+}
+.history-vd-del-btn {
+  flex: 2;
+}
+.history-vd-del-btn .fa-times {
+  padding: 0.5rem;
+}
+.clear-history-btn {
+  background-color: var(--white);
+  padding: 4px 8px;
+  border: 0;
+}
+.clear-history-btn .fa-trash-alt {
+  padding-right: 5px;
+}

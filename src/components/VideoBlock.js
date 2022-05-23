@@ -6,7 +6,7 @@ import { ActionMenu } from "./ActionMenu";
 export const VideoBlock = ({ video }) => {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const { thumbnail, title, views, creator, published_on } = video;
-  const { videoDispatch } = useVideo();
+  const { videoDispatch, videoState } = useVideo();
   let navigate = useNavigate();
   return (
     <>

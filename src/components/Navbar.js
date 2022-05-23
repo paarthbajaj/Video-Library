@@ -13,8 +13,15 @@ export const Navbar = () => {
       <div className="header-actions flex-row">
         <Link to="/">
           <div className="txt-center cursor-pointer action-user">
-            <span className="fa fa-user icon "></span>
-            <span className="txt-bold pl-3-4">Signin</span>
+            {localStorage.getItem("key") == "" ? (
+              <>
+                {" "}
+                <span className="fa fa-user icon "></span>
+                <span className="txt-bold pl-3-4">Login</span>
+              </>
+            ) : (
+              <span className="txt-bold">Logout</span>
+            )}
           </div>
         </Link>
       </div>

@@ -2,7 +2,10 @@ import { Sidebar } from "./Sidebar";
 import "./VideoList.css";
 import { useEffect } from "react";
 import { useVideo } from "../context/VideoContext";
-import { getSelectedPlaylistVideos } from "../backend/utils/serviceUtil";
+import {
+  getSelectedPlaylistVideos,
+  deletePlaylist,
+} from "../backend/utils/serviceUtil";
 export const Playlists = () => {
   const { videoState, getPlaylists, videoDispatch } = useVideo();
   useEffect(() => {
@@ -20,18 +23,44 @@ export const Playlists = () => {
           <div className="playlist-container mt-1 flex-row g-1">
             <div className="list-of-paylist">
               {videoState.listOfPlaylist?.map((i) => (
-                <div
-                  className="single-playlist-block"
-                  onClick={() =>
-                    videoDispatch({ type: "SET_SELECTED_PLAYLIST", payload: i })
-                  }
-                >
+                <div className="single-playlist-block">
                   <div className="playlist-image flex-column cursor-pointer">
                     <img
                       src="https://content.wepik.com/statics/1472280/playlist-youtube-thumbnail-9157900page1.jpg"
                       alt="thumbnail"
+                      onClick={() =>
+                        videoDispatch({
+                          type: "SET_SELECTED_PLAYLIST",
+                          payload: i,
+                        })
+                      }
                     />
-                    <span className="playlist-name">{i.title}</span>
+                    <div className="playlist-card-footer flex-row">
+                      <span
+                        className="grow-1"
+                        onClick={() =>
+                          videoDispatch({
+                            type: "SET_SELECTED_PLAYLIST",
+                            payload: i,
+                          })
+                        }
+                      >
+                        {i.title}
+                      </span>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => {
+                          deletePlaylist(i._id);
+                          videoDispatch({ type: "DELETE_PLAYLIST" });
+                          videoDispatch({
+                            type: "SET_SELECTED_PLAYLIST",
+                            payload: "",
+                          });
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

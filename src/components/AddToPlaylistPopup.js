@@ -45,17 +45,19 @@ export const PlaylistPopup = (video) => {
           </div>
           {videoState.showCreatePlaylistBlock && (
             <div className="flex-column">
-              <label className="flex-column">
+              <label className="flex-column mt-5">
                 {" "}
                 Name
                 <input
                   type="text"
                   placeholder="Enter playlist name..."
+                  className="enter-playlist-name"
                   value={playlistName}
                   onChange={(e) => setPlaylistName(() => e.target.value)}
                 />
               </label>
               <button
+                className="vl-pri-btn mt-5"
                 onClick={() => {
                   videoDispatch({ type: "HIDE_CREATE_PLAYLIST_BLOCK" });
                   videoDispatch({ type: "CLOSE_PLAYLIST_POPUP" });

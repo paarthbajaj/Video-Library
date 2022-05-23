@@ -11,10 +11,6 @@ export const Signin = () => {
         alt="video-library-background-image"
       />
       <h1 className="txt-center txt-4">Login to your account</h1>
-      <h2 style={{ color: "red", textAlign: "center" }}>
-        Please click on signin as guest, as signin and signup are not working
-        yet
-      </h2>
       <form className="auth-form flex-column g-1 align-center justify-center">
         <label className="log-input">
           <input

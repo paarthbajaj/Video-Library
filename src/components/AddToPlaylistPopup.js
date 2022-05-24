@@ -2,18 +2,50 @@ import { useState, useEffect } from "react";
 import {
   addToPlaylist,
   addVideoToPlaylist,
+  deleteVideoFromPlaylist,
 } from "../backend/utils/serviceUtil";
+import { useVideoAction } from "../context/VideoActionContext";
 import { useVideo } from "../context/VideoContext";
 
 export const PlaylistPopup = (video) => {
   const { videoDispatch, videoState, getPlaylists } = useVideo();
+  const { videoActionDispatch, videoActionState } = useVideoAction();
   const [playlistName, setPlaylistName] = useState("");
   useEffect(() => {
     getPlaylists();
-  }, []);
+  }, [videoActionState.toast.showToast]);
+  const deleteFromPlaylist = (playlistId, videoId) => {
+    deleteVideoFromPlaylist(playlistId, videoId);
+    videoActionDispatch({
+      type: "SET_SHOW_TOAST",
+      payload: true,
+    });
+    videoActionDispatch({
+      type: "SET_TOAST_TYPE",
+      payload: "alert-danger",
+    });
+    videoActionDispatch({
+      type: "SET_TOAST_MESSAGE",
+      payload: "Removed from playlist",
+    });
+  };
+  const addToPlaylistFunc = (playlistId, videoId) => {
+    addVideoToPlaylist(playlistId, videoId);
+    videoActionDispatch({
+      type: "SET_SHOW_TOAST",
+      payload: true,
+    });
+    videoActionDispatch({
+      type: "SET_TOAST_TYPE",
+      payload: "alert-success",
+    });
+    videoActionDispatch({
+      type: "SET_TOAST_MESSAGE",
+      payload: "Added to playlist",
+    });
+  };
   return (
     <>
-      {console.log(videoState)}
       <div className="popup-overlay">
         <div className="popup-container">
           <div className="popup-header flex-row">
@@ -31,9 +63,16 @@ export const PlaylistPopup = (video) => {
                 <label className="cursor-pointer">
                   <input
                     type="checkbox"
-                    onInput={() =>
-                      addVideoToPlaylist(i._id, videoState.selectedVideo)
-                    }
+                    onInput={() => {
+                      i.videos.some(
+                        (e) => e._id == videoState.selectedVideo._id
+                      )
+                        ? deleteFromPlaylist(
+                            i._id,
+                            videoState.selectedVideo._id
+                          )
+                        : addToPlaylistFunc(i._id, videoState.selectedVideo);
+                    }}
                     defaultChecked={i.videos.some(
                       (e) => e._id == videoState.selectedVideo._id
                     )}
@@ -62,6 +101,18 @@ export const PlaylistPopup = (video) => {
                   videoDispatch({ type: "HIDE_CREATE_PLAYLIST_BLOCK" });
                   videoDispatch({ type: "CLOSE_PLAYLIST_POPUP" });
                   addToPlaylist(playlistName, videoState.selectedVideo);
+                  videoActionDispatch({
+                    type: "SET_SHOW_TOAST",
+                    payload: true,
+                  });
+                  videoActionDispatch({
+                    type: "SET_TOAST_TYPE",
+                    payload: "alert-success",
+                  });
+                  videoActionDispatch({
+                    type: "SET_TOAST_MESSAGE",
+                    payload: "Playlist created",
+                  });
                 }}
               >
                 Create

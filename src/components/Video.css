@@ -31,3 +31,9 @@
 .clear-history-btn .fa-trash-alt {
   padding-right: 5px;
 }
+.playlist-vd-del-btn {
+  flex: 1;
+}
+.playlist-video-text {
+  flex: 5;
+}

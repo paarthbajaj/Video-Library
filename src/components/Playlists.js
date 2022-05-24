@@ -1,21 +1,25 @@
 import { Sidebar } from "./Sidebar";
 import "./VideoList.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useVideo } from "../context/VideoContext";
 import {
-  getSelectedPlaylistVideos,
   deletePlaylist,
+  deleteVideoFromPlaylist,
 } from "../backend/utils/serviceUtil";
+import { useVideoAction } from "../context/VideoActionContext";
 export const Playlists = () => {
   const { videoState, getPlaylists, videoDispatch } = useVideo();
+  const { videoActionDispatch } = useVideoAction();
+  const [counter, setCounter] = useState(0);
   useEffect(() => {
     getPlaylists();
-    const response = getPlaylists();
-    console.log(response);
-  }, []);
+    videoDispatch({
+      type: "SET_SELECTED_PLAYLIST",
+      payload: "",
+    });
+  }, [counter]);
   return (
     <>
-      {console.log(videoState)}
       <div className="app-body">
         <Sidebar />
         <div className="vl-page-container">
@@ -56,6 +60,18 @@ export const Playlists = () => {
                             type: "SET_SELECTED_PLAYLIST",
                             payload: "",
                           });
+                          videoActionDispatch({
+                            type: "SET_SHOW_TOAST",
+                            payload: true,
+                          });
+                          videoActionDispatch({
+                            type: "SET_TOAST_TYPE",
+                            payload: "alert-danger",
+                          });
+                          videoActionDispatch({
+                            type: "SET_TOAST_MESSAGE",
+                            payload: "Playlist deleted",
+                          });
                         }}
                       >
                         Delete
@@ -77,6 +93,30 @@ export const Playlists = () => {
                       <div className="playlist-video-creator">
                         {video.creator}
                       </div>
+                    </div>
+                    <div className="playlist-vd-del-btn">
+                      <i
+                        className="far fa-times cursor-pointer"
+                        onClick={() => {
+                          deleteVideoFromPlaylist(
+                            videoState.selectedPlaylist._id,
+                            video._id
+                          );
+                          videoActionDispatch({
+                            type: "SET_SHOW_TOAST",
+                            payload: true,
+                          });
+                          videoActionDispatch({
+                            type: "SET_TOAST_TYPE",
+                            payload: "alert-danger",
+                          });
+                          videoActionDispatch({
+                            type: "SET_TOAST_MESSAGE",
+                            payload: "Removed from playlist",
+                          });
+                          setCounter((counter) => counter + 1);
+                        }}
+                      ></i>
                     </div>
                   </div>
                 ))}

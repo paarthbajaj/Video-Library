@@ -1,8 +1,5 @@
 import axios from "axios";
 const encodedToken = localStorage.getItem("key");
-{
-  console.log(encodedToken);
-}
 
 export const addToWatchLater = async (videoObj) => {
   try {
@@ -34,9 +31,6 @@ export const addToPlaylist = async (playlistName, videoObj) => {
         },
       }
     );
-    console.log(playlistData);
-    // console.log({ videoObj });
-
     const data = await axios.post(
       `/api/user/playlists/${
         playlistData.data.playlists[playlistData.data.playlists.length - 1]._id
@@ -50,11 +44,6 @@ export const addToPlaylist = async (playlistName, videoObj) => {
         },
       }
     );
-    console.log(data);
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    // return playlistData;
   } catch (err) {
     console.log(err);
   }
@@ -73,7 +62,6 @@ export const addVideoToPlaylist = async (playlistId, videoObj) => {
         },
       }
     );
-    console.log(data);
   } catch (err) {
     console.log(err);
   }
@@ -85,26 +73,6 @@ export const getSelectedPlaylistVideos = async (selectedPlaylistId) => {
         authorization: encodedToken,
       },
     });
-    console.log(data);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const addToLikedVideos = async (videoObj) => {
-  try {
-    const data = await axios.post(
-      "/api/user/likes",
-      {
-        video: videoObj,
-      },
-      {
-        headers: {
-          authorization: encodedToken,
-        },
-      }
-    );
-    console.log(data);
   } catch (err) {
     console.log(err);
   }
@@ -123,7 +91,6 @@ export const addToWatchHistory = async (videoObj) => {
         },
       }
     );
-    console.log(data);
   } catch (err) {
     console.log(err);
   }
@@ -135,7 +102,6 @@ export const delVideoFromHistory = async (videoId) => {
         authorization: encodedToken,
       },
     });
-    console.log(data);
   } catch (err) {
     console.log(err);
   }
@@ -147,7 +113,6 @@ export const delAllWatchHistory = async () => {
         authorization: encodedToken,
       },
     });
-    console.log(data);
   } catch (err) {
     console.log(err);
   }
@@ -159,7 +124,6 @@ export const deletePlaylist = async (playlistId) => {
         authorization: encodedToken,
       },
     });
-    console.log(data);
   } catch (err) {
     console.log(err);
   }
@@ -171,7 +135,20 @@ export const removeFromWatchLater = async (videoId) => {
         authorization: encodedToken,
       },
     });
-    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const deleteVideoFromPlaylist = async (playlistId, videoId) => {
+  try {
+    const data = await axios.delete(
+      `/api/user/playlists/${playlistId}/${videoId}`,
+      {
+        headers: {
+          authorization: encodedToken,
+        },
+      }
+    );
   } catch (err) {
     console.log(err);
   }

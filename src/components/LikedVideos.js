@@ -15,7 +15,7 @@ export const LikedVideos = () => {
         <h1 className="txt-3">Liked Videos</h1>
         <div className="video-list-container mt-1 flex-row g-1">
           {videoState?.likedVideos?.map((video) => (
-            <VideoBlock video={video} />
+            <VideoBlock video={video} key={video._id} />
           ))}
         </div>
       </div>

@@ -1,4 +1,3 @@
-import { VideoBlock } from "./VideoBlock";
 import { Sidebar } from "./Sidebar";
 import "./VideoList.css";
 import { useEffect } from "react";
@@ -8,8 +7,10 @@ import {
   delAllWatchHistory,
 } from "../backend/utils/serviceUtil";
 import "./Video.css";
+import { useVideoAction } from "../context/VideoActionContext";
 export const History = () => {
   const { getWatchHistory, videoState, videoDispatch } = useVideo();
+  const { videoActionDispatch } = useVideoAction();
   useEffect(() => {
     getWatchHistory();
   }, []);
@@ -25,6 +26,18 @@ export const History = () => {
               onClick={() => {
                 delAllWatchHistory();
                 videoDispatch({ type: "DELETE_ALL_HISTORY" });
+                videoActionDispatch({
+                  type: "SET_SHOW_TOAST",
+                  payload: true,
+                });
+                videoActionDispatch({
+                  type: "SET_TOAST_TYPE",
+                  payload: "alert-warning",
+                });
+                videoActionDispatch({
+                  type: "SET_TOAST_MESSAGE",
+                  payload: "History cleared",
+                });
               }}
             >
               <i className="fal fa-trash-alt"></i>Clear all watch history
@@ -52,6 +65,18 @@ export const History = () => {
                       videoDispatch({
                         type: "DELETE_FROM_HISTORY",
                         payload: video._id,
+                      });
+                      videoActionDispatch({
+                        type: "SET_SHOW_TOAST",
+                        payload: true,
+                      });
+                      videoActionDispatch({
+                        type: "SET_TOAST_TYPE",
+                        payload: "alert-danger",
+                      });
+                      videoActionDispatch({
+                        type: "SET_TOAST_MESSAGE",
+                        payload: "Removed from history",
                       });
                     }}
                   ></i>

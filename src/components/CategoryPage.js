@@ -1,17 +1,15 @@
-import { VideoBlock } from "./VideoBlock";
-import { Sidebar } from "./Sidebar";
-import "./VideoList.css";
-import { useVideo } from "../context/VideoContext";
-import { PlaylistPopup } from "./AddToPlaylistPopup";
 import { Link } from "react-router-dom";
+import { useVideo } from "../context/VideoContext";
+import { Sidebar } from "./Sidebar";
+import { VideoBlock } from "./VideoBlock";
+import "./VideoList.css";
 
-export const VideoList = () => {
+export const CategoryPage = () => {
   const { videoState, videoDispatch } = useVideo();
   return (
-    <>
-      {" "}
+    <div className="app-body">
       <Sidebar />
-      <main className="vl-page-container">
+      <div className="vl-page-container">
         <div className="category-list pl-3-4 flex-row g-1">
           {videoState.listOfCategory?.map((category) => (
             <Link to="/category" key={category._id}>
@@ -34,12 +32,11 @@ export const VideoList = () => {
         </div>
         <div className="video-list-container mt-1 flex-row g-1">
           {videoState &&
-            videoState.listOfVideos.map((video) => (
+            videoState.catgoryFilteredVideos.map((video) => (
               <VideoBlock video={video} key={video._id} />
             ))}
         </div>
-        {videoState.showPlaylistPopup && <PlaylistPopup />}
-      </main>
-    </>
+      </div>
+    </div>
   );
 };

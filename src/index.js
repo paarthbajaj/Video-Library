@@ -13,15 +13,15 @@ makeServer();
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <VideoContextProvider>
-        <VideoActionProvider>
-          <BrowserRouter>
+    <BrowserRouter>
+      <AuthContextProvider>
+        <VideoContextProvider>
+          <VideoActionProvider>
             <App />
-          </BrowserRouter>
-        </VideoActionProvider>
-      </VideoContextProvider>
-    </AuthContextProvider>
+          </VideoActionProvider>
+        </VideoContextProvider>
+      </AuthContextProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

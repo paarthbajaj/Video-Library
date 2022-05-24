@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 export const Signin = () => {
-  const { signInAsGuest } = useAuth();
+  const { signInAsGuest, signinClickHandler } = useAuth();
   return (
     <div className="signin-page">
       <img
@@ -35,7 +35,11 @@ export const Signin = () => {
           </span>
         </label>
         <Link to="/home">
-          <button className="vl-pri-btn" type="submit">
+          <button
+            className="vl-pri-btn"
+            type="submit"
+            onClick={signinClickHandler}
+          >
             Sign In
           </button>
         </Link>

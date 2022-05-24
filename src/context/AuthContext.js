@@ -1,9 +1,11 @@
 import axios from "axios";
 import { createContext, useContext, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import { users } from "../backend/db/users";
 const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
+  let navigate = useNavigate();
   const signInAsGuest = async () => {
     try {
       const res = await axios.post("/api/auth/login", {
@@ -25,6 +27,20 @@ const AuthContextProvider = ({ children }) => {
         confirm_password: authState.confirm_password,
       });
       localStorage.setItem("key", signupRes.data.encodedToken);
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const signinClickHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const signinRes = await axios.post("/api/auth/login", {
+        email: authState.email,
+        password: authState.password,
+      });
+      localStorage.setItem("key", signinRes.data.encodedToken);
+      navigate("/home");
     } catch (err) {
       console.log(err);
     }
@@ -49,7 +65,13 @@ const AuthContextProvider = ({ children }) => {
   });
   return (
     <AuthContext.Provider
-      value={{ signInAsGuest, signupClickHandler, authState, authDispatch }}
+      value={{
+        signInAsGuest,
+        signupClickHandler,
+        signinClickHandler,
+        authState,
+        authDispatch,
+      }}
     >
       {children}
     </AuthContext.Provider>

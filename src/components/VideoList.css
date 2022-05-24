@@ -46,8 +46,10 @@
   margin-top: 3px;
 }
 .action-menu {
-  padding: 0 10px;
   position: relative;
+}
+.action-menu .fa-ellipsis-v {
+  padding: 0 10px;
 }
 .action-menu-options {
   background-color: var(--blue-shade5);
@@ -143,4 +145,14 @@
 .enter-playlist-name {
   outline: 0;
   padding: 4px 8px;
+}
+.category-list {
+  border-top: 1px solid var(--light-grey);
+  border-bottom: 1px solid var(--light-grey);
+  padding: 10px 0;
+}
+.category-item {
+  background-color: var(--light-grey);
+  padding: 5px 12px;
+  border-radius: 1rem;
 }

@@ -3,11 +3,12 @@ import {
   addToWatchLater,
   removeFromWatchLater,
 } from "../backend/utils/serviceUtil";
+import { useVideoAction } from "../context/VideoActionContext";
 import { useVideo } from "../context/VideoContext";
-import { PlaylistPopup } from "./AddToPlaylistPopup";
 
 export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
   const { videoState, videoDispatch, getWatchLaterApi } = useVideo();
+  const { videoActionDispatch, videoActionState } = useVideoAction();
   useEffect(() => {
     getWatchLaterApi();
   }, [showActionMenu]);
@@ -15,7 +16,7 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
     <div className="action-menu cursor-pointer">
       <i
         className="far fa-ellipsis-v"
-        onClick={(e) => {
+        onClick={() => {
           setShowActionMenu((prev) => !prev);
         }}
       ></i>
@@ -26,6 +27,15 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
               onClick={() => {
                 setShowActionMenu(false);
                 removeFromWatchLater(video._id);
+                videoActionDispatch({ type: "SET_SHOW_TOAST", payload: true });
+                videoActionDispatch({
+                  type: "SET_TOAST_TYPE",
+                  payload: "alert-danger",
+                });
+                videoActionDispatch({
+                  type: "SET_TOAST_MESSAGE",
+                  payload: "Removed from watch later",
+                });
               }}
               className="action-option-block"
             >
@@ -37,6 +47,15 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
               onClick={() => {
                 setShowActionMenu(false);
                 addToWatchLater(video);
+                videoActionDispatch({ type: "SET_SHOW_TOAST", payload: true });
+                videoActionDispatch({
+                  type: "SET_TOAST_TYPE",
+                  payload: "alert-success",
+                });
+                videoActionDispatch({
+                  type: "SET_TOAST_MESSAGE",
+                  payload: "Added to watch later",
+                });
               }}
               className="action-option-block"
             >

@@ -14,13 +14,13 @@ export const categories = [
   },
   {
     _id: uuid(),
-    categoryName: "Frontend Development",
+    categoryName: "DC",
     description:
       "Front-end web development, also known as client-side development is the practice of producing HTML, CSS and JavaScript for a website or Web Application",
   },
   {
     _id: uuid(),
-    categoryName: "Backend Development",
+    categoryName: "Marvel",
     description:
       "Backend Development is also known as server-side development. It is everything that the users don't see and contains behind-the-scenes activities that occur when performing any action on a website.",
   },

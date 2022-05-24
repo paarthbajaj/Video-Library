@@ -31,6 +31,17 @@ const VideoContextProvider = ({ children }) => {
         return { ...state, watchHistory: [] };
       case "DELETE_PLAYLIST":
         return { ...state, listOfPlaylist: [] };
+      case "DELETE_VIDEO_FROM_PLAYLIST":
+        return {
+          ...state,
+          selectedPlaylist: state.selectedPlaylist.videos.filter(
+            (i) => i._id !== action.payload
+          ),
+        };
+      case "FETCH_CATEGORIES":
+        return { ...state, listOfCategory: action.payload };
+      case "SET_CATEGORY_FILTER":
+        return { ...state, catgoryFilteredVideos: action.payload };
       case "SHOW_PLAYLIST_POPUP":
         return { ...state, showPlaylistPopup: true };
       case "CLOSE_PLAYLIST_POPUP":
@@ -51,6 +62,8 @@ const VideoContextProvider = ({ children }) => {
     listOfPlaylist: [],
     likedVideos: [],
     watchHistory: [],
+    listOfCategory: [],
+    catgoryFilteredVideos: [],
   };
   const [videoState, videoDispatch] = useReducer(videoReducer, initialState);
   useEffect(() => {
@@ -62,8 +75,8 @@ const VideoContextProvider = ({ children }) => {
         console.log(err);
       }
     })();
+    getCategories();
   }, []);
-  console.log(encodedToken);
   const getWatchLaterApi = async () => {
     try {
       const { data } = await axios.get("/api/user/watchlater", {
@@ -74,13 +87,11 @@ const VideoContextProvider = ({ children }) => {
       console.log(err);
     }
   };
-  console.log(encodedToken);
   const getPlaylists = async () => {
     try {
       const { data } = await axios.get("/api/user/playlists", {
         headers: { authorization: encodedToken },
       });
-      console.log(data);
       videoDispatch({ type: "CREATE_PLAYLIST", payload: data.playlists });
     } catch (err) {
       console.log(err);
@@ -91,7 +102,6 @@ const VideoContextProvider = ({ children }) => {
       const { data } = await axios.get("/api/user/likes", {
         headers: { authorization: encodedToken },
       });
-      console.log(data);
       videoDispatch({ type: "SET_LIKED_VIDEOS", payload: data.likes });
     } catch (err) {
       console.log(err);
@@ -102,8 +112,49 @@ const VideoContextProvider = ({ children }) => {
       const { data } = await axios.get("/api/user/history", {
         headers: { authorization: encodedToken },
       });
-      console.log(data);
       videoDispatch({ type: "SET_WATCH_HISTORY", payload: data.history });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const addToLikedVideos = async (videoObj) => {
+    try {
+      const data = await axios.post(
+        "/api/user/likes",
+        {
+          video: videoObj,
+        },
+        {
+          headers: {
+            authorization: encodedToken,
+          },
+        }
+      );
+      videoDispatch({ type: "SET_LIKED_VIDEOS", payload: data.data.likes });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const deleteFromLikedVideos = async (videoId) => {
+    try {
+      const data = await axios.delete(`/api/user/likes/${videoId}`, {
+        headers: {
+          authorization: encodedToken,
+        },
+      });
+      videoDispatch({ type: "SET_LIKED_VIDEOS", payload: data.data.likes });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getCategories = async () => {
+    try {
+      const { data } = await axios.get("/api/categories", {
+        headers: {
+          authorization: encodedToken,
+        },
+      });
+      videoDispatch({ type: "FETCH_CATEGORIES", payload: data.categories });
     } catch (err) {
       console.log(err);
     }
@@ -118,6 +169,9 @@ const VideoContextProvider = ({ children }) => {
         getPlaylists,
         getLikedVideos,
         getWatchHistory,
+        addToLikedVideos,
+        deleteFromLikedVideos,
+        getCategories,
       }}
     >
       {children}

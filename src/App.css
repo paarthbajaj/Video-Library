@@ -28,4 +28,11 @@
   margin-left: 20vw;
   min-height: 80vh;
 }
+.vl-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+}
 @import url(https://patched-ui.netlify.app/utility-classes.css);

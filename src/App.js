@@ -10,6 +10,8 @@ import { Signup } from "./pages/Signup";
 import { Playlists } from "./components/Playlists";
 import { SingleVideoPage } from "./components/SingleVideoPage";
 import { LikedVideos } from "./components/LikedVideos";
+import { CategoryPage } from "./components/CategoryPage";
+import { Toast } from "./components/Toast";
 
 function App() {
   return (
@@ -24,7 +26,9 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/watch" element={<SingleVideoPage />} />
         <Route path="/liked-videos" element={<LikedVideos />} />
+        <Route path="/category" element={<CategoryPage />} />
       </Routes>
+      <Toast />
     </div>
   );
 }

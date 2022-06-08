@@ -52,7 +52,7 @@
   padding: 0 10px;
 }
 .action-menu-options {
-  background-color: var(--blue-shade5);
+  background-color: var(--gray-shade1);
   position: absolute;
   padding: 0.5rem 0;
   right: 0px;
@@ -108,6 +108,8 @@
 }
 .playlist-videos {
   min-width: 55%;
+  padding-left: 3vw;
+  border-left: 2px solid var(--light-grey);
 }
 .playlist-image {
   background-color: var(--light-grey);
@@ -119,7 +121,7 @@
   width: 100%;
 }
 .playlist-card-footer {
-  background-color: var(--blue-shade4);
+  background-color: var(--gray-shade1);
   padding: 8px;
   width: 100%;
   text-transform: uppercase;
@@ -155,4 +157,10 @@
   background-color: var(--light-grey);
   padding: 5px 12px;
   border-radius: 1rem;
+}
+.empty-list {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-25%, -50%);
 }

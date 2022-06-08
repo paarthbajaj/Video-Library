@@ -6,17 +6,14 @@
   font-size: large;
 }
 :root {
-  --blue-shade1: #04009a;
-  --blue-shade2: #77acf1;
-  --blue-shade3: #3edbf0;
-  --blue-shade4: #c0fefc;
-  --blue-shade5: #e3eefc;
+  --black-shade1: #2e2e2e;
+  --gray-shade1: #eeeeee;
 }
 .app-body {
   margin-top: 4.1rem;
 }
 .vl-pri-btn {
-  background-color: var(--blue-shade1);
+  background-color: var(--black-shade1);
   color: var(--white);
   cursor: pointer;
   border: 1px solid transparent;
@@ -25,8 +22,10 @@
   border-radius: 0.25rem;
 }
 .vl-page-container {
-  margin-left: 20vw;
+  margin-left: 17vw;
   min-height: 80vh;
+  padding-left: 3vw;
+  border-left: 2px solid var(--light-grey);
 }
 .vl-toast {
   position: fixed;

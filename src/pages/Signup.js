@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 export const Signup = () => {
@@ -78,11 +79,11 @@ export const Signup = () => {
           Sign Up
         </button>
         <span className="or-divider">OR</span>
-        <a href="./signin.html">
+        <Link to="/">
           <button type="button" className="btn btn-secondary">
             Sign In
           </button>
-        </a>
+        </Link>
       </form>
     </div>
   );

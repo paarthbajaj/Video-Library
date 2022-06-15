@@ -1,8 +1,20 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setToast } from "../store/slices/actionSlice";
+import {
+  setConfirmPassword,
+  setEmail,
+  setName,
+  setPassword,
+} from "../store/slices/authSlice";
+import { signupClickHandler } from "../store/thunks/authThunk";
 import "./Auth.css";
 export const Signup = () => {
-  const { signupClickHandler, authDispatch } = useAuth();
+  const dispatch = useDispatch();
+  const { name, email, password, confirm_password } = useSelector(
+    (state) => state.auth
+  );
+  const navigate = useNavigate();
   return (
     <div className="signin-page">
       <img
@@ -14,38 +26,32 @@ export const Signup = () => {
       <form className="auth-form flex-column g-1 align-center justify-center">
         <label className="log-input">
           <input
-            className="input log-input req-input"
+            className="input log-input"
             type="text"
             placeholder="Name"
             required
-            onChange={(e) =>
-              authDispatch({ type: "EDIT_NAME", payload: e.target.value })
-            }
+            onChange={(e) => dispatch(setName(e.target.value))}
           />
           <span className="error">Please enter your name</span>
         </label>
         <label className="log-input">
           <input
-            className="input log-input req-input"
+            className="input log-input"
             type="email"
             placeholder="Email"
             required
-            onChange={(e) =>
-              authDispatch({ type: "EDIT_EMAIL", payload: e.target.value })
-            }
+            onChange={(e) => dispatch(setEmail(e.target.value))}
           />
           <span className="error">Please enter your email</span>
         </label>
         <label className="log-input">
           <input
-            className="input log-input req-input"
+            className="input log-input"
             type="password"
             placeholder="Password"
             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
-            onChange={(e) =>
-              authDispatch({ type: "EDIT_PASSWORD", payload: e.target.value })
-            }
+            onChange={(e) => dispatch(setPassword(e.target.value))}
           />
           <span className="error">
             Password must contain eight characters, at least one letter, one
@@ -54,17 +60,12 @@ export const Signup = () => {
         </label>
         <label className="log-input">
           <input
-            className="input log-input req-input"
+            className="input log-input"
             type="password"
             placeholder="Confirm Password"
             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
-            onChange={(e) =>
-              authDispatch({
-                type: "EDIT_CONFIRM_PASSWORD",
-                payload: e.target.value,
-              })
-            }
+            onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
           />
           <span className="error">
             Password must contain eight characters, at least one letter, one
@@ -74,7 +75,29 @@ export const Signup = () => {
         <button
           className="vl-pri-btn"
           type="submit"
-          onClick={signupClickHandler}
+          onClick={(e) => {
+            e.preventDefault();
+            name !== "" ||
+            email !== "" ||
+            password !== "" ||
+            confirm_password !== ""
+              ? dispatch(
+                  signupClickHandler({
+                    name,
+                    email,
+                    password,
+                    confirm_password,
+                    navigate,
+                  })
+                )
+              : dispatch(
+                  setToast({
+                    showToast: true,
+                    type: "alert-danger",
+                    message: "Please fill all the fields",
+                  })
+                );
+          }}
         >
           Sign Up
         </button>

@@ -1,22 +1,24 @@
 import { Sidebar } from "./Sidebar";
 import "./VideoList.css";
 import { useEffect, useState } from "react";
-import { useVideo } from "../context/VideoContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedPlaylist } from "../store/slices/videoSlice";
 import {
-  deletePlaylist,
-  deleteVideoFromPlaylist,
-} from "../backend/utils/serviceUtil";
-import { useVideoAction } from "../context/VideoActionContext";
+  fetchPlaylists,
+  removePlaylist,
+  removeVideoFromPlaylist,
+} from "../store/thunks/videoThunk";
+import { setToast } from "../store/slices/actionSlice";
+
 export const Playlists = () => {
-  const { videoState, getPlaylists, videoDispatch } = useVideo();
-  const { videoActionDispatch } = useVideoAction();
+  const encodedToken = localStorage.getItem("key");
+  const dispatch = useDispatch();
+  const { selectedPlaylist, listOfPlaylist } = useSelector(
+    (state) => state.videos
+  );
   const [counter, setCounter] = useState(0);
   useEffect(() => {
-    getPlaylists();
-    videoDispatch({
-      type: "SET_SELECTED_PLAYLIST",
-      payload: "",
-    });
+    dispatch(fetchPlaylists(encodedToken));
   }, [counter]);
   return (
     <>
@@ -24,55 +26,42 @@ export const Playlists = () => {
         <Sidebar />
         <div className="vl-page-container">
           <h1 className="txt-3">Playlists</h1>
-          {videoState.listOfPlaylist?.length > 0 ? (
+          {listOfPlaylist?.length > 0 ? (
             <div className="playlist-container mt-1 flex-row g-1">
               <div className="list-of-paylist">
-                {videoState.listOfPlaylist?.map((i) => (
-                  <div className="single-playlist-block">
+                {listOfPlaylist?.map((i) => (
+                  <div className="single-playlist-block" key={i._id}>
                     <div className="playlist-image flex-column cursor-pointer">
                       <img
                         src="https://content.wepik.com/statics/1472280/playlist-youtube-thumbnail-9157900page1.jpg"
                         alt="thumbnail"
-                        onClick={() =>
-                          videoDispatch({
-                            type: "SET_SELECTED_PLAYLIST",
-                            payload: i,
-                          })
-                        }
+                        onClick={() => dispatch(setSelectedPlaylist(i))}
                       />
                       <div className="playlist-card-footer flex-row">
                         <span
                           className="grow-1"
-                          onClick={() =>
-                            videoDispatch({
-                              type: "SET_SELECTED_PLAYLIST",
-                              payload: i,
-                            })
-                          }
+                          onClick={() => dispatch(setSelectedPlaylist(i))}
                         >
                           {i.title}
                         </span>
                         <button
                           className="cursor-pointer"
                           onClick={() => {
-                            deletePlaylist(i._id);
-                            videoDispatch({ type: "DELETE_PLAYLIST" });
-                            videoDispatch({
-                              type: "SET_SELECTED_PLAYLIST",
-                              payload: "",
-                            });
-                            videoActionDispatch({
-                              type: "SET_SHOW_TOAST",
-                              payload: true,
-                            });
-                            videoActionDispatch({
-                              type: "SET_TOAST_TYPE",
-                              payload: "alert-danger",
-                            });
-                            videoActionDispatch({
-                              type: "SET_TOAST_MESSAGE",
-                              payload: "Playlist deleted",
-                            });
+                            dispatch(
+                              removePlaylist({
+                                playlistId: i._id,
+                                encodedToken,
+                              })
+                            );
+                            dispatch(setSelectedPlaylist(""));
+                            dispatch(
+                              setToast({
+                                showToast: true,
+                                type: "alert-danger",
+                                message: "Playlist deleted",
+                              })
+                            );
+                            setCounter((counter) => counter + 1);
                           }}
                         >
                           Delete
@@ -83,47 +72,47 @@ export const Playlists = () => {
                 ))}
               </div>
               <div className="playlist-videos">
-                {videoState.selectedPlaylist &&
-                  videoState.selectedPlaylist?.videos?.map((video) => (
-                    <div
-                      className="playlist-video flex-row g-1"
-                      key={video._id}
-                    >
-                      <img src={video.thumbnail} />
-                      <div className="playlist-video-text mr-1">
-                        <div className="playlist-video-title txt-bold pb-1 txt-6">
-                          {video.title}
+                {selectedPlaylist &&
+                  listOfPlaylist
+                    .find((playlist) => playlist._id == selectedPlaylist._id)
+                    ?.videos?.map((video) => (
+                      <div
+                        className="playlist-video flex-row g-1"
+                        key={video._id}
+                      >
+                        <img src={video.thumbnail} />
+                        <div className="playlist-video-text mr-1">
+                          <div className="playlist-video-title txt-bold pb-1 txt-6">
+                            {video.title}
+                          </div>
+                          <div className="playlist-video-creator">
+                            {video.creator}
+                          </div>
                         </div>
-                        <div className="playlist-video-creator">
-                          {video.creator}
+                        <div className="playlist-vd-del-btn">
+                          <i
+                            className="far fa-times cursor-pointer"
+                            onClick={() => {
+                              dispatch(
+                                removeVideoFromPlaylist({
+                                  playlistId: selectedPlaylist._id,
+                                  videoId: video._id,
+                                  encodedToken,
+                                })
+                              );
+                              dispatch(
+                                setToast({
+                                  showToast: true,
+                                  type: "alert-danger",
+                                  message: "Removed from playlist",
+                                })
+                              );
+                              setCounter((counter) => counter + 1);
+                            }}
+                          ></i>
                         </div>
                       </div>
-                      <div className="playlist-vd-del-btn">
-                        <i
-                          className="far fa-times cursor-pointer"
-                          onClick={() => {
-                            deleteVideoFromPlaylist(
-                              videoState.selectedPlaylist._id,
-                              video._id
-                            );
-                            videoActionDispatch({
-                              type: "SET_SHOW_TOAST",
-                              payload: true,
-                            });
-                            videoActionDispatch({
-                              type: "SET_TOAST_TYPE",
-                              payload: "alert-danger",
-                            });
-                            videoActionDispatch({
-                              type: "SET_TOAST_MESSAGE",
-                              payload: "Removed from playlist",
-                            });
-                            setCounter((counter) => counter + 1);
-                          }}
-                        ></i>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
               </div>
             </div>
           ) : (

@@ -1,19 +1,20 @@
 import { Sidebar } from "./Sidebar";
 import "./VideoList.css";
 import { useEffect } from "react";
-import { useVideo } from "../context/VideoContext";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  delVideoFromHistory,
-  delAllWatchHistory,
-} from "../backend/utils/serviceUtil";
-import "./Video.css";
-import { useVideoAction } from "../context/VideoActionContext";
+  fetchWatchHistory,
+  removeAllFromWatchHistory,
+  removeFromWatchHistory,
+} from "../store/thunks/videoThunk";
+import { setToast } from "../store/slices/actionSlice";
 export const History = () => {
-  const { getWatchHistory, videoState, videoDispatch } = useVideo();
-  const { videoActionDispatch } = useVideoAction();
+  const encodedToken = localStorage.getItem("key");
+  const dispatch = useDispatch();
+  const { watchHistory } = useSelector((state) => state.videos);
   useEffect(() => {
-    getWatchHistory();
-  }, []);
+    dispatch(fetchWatchHistory(encodedToken));
+  }, [watchHistory]);
   return (
     <>
       <div className="app-body">
@@ -21,24 +22,18 @@ export const History = () => {
         <div className="vl-page-container">
           <div className="flex-row">
             <h1 className="txt-3 grow-1">Watch History</h1>
-            {videoState?.watchHistory?.length > 0 ? (
+            {watchHistory?.length > 0 ? (
               <button
                 className="clear-history-btn cursor-pointer m-radius"
                 onClick={() => {
-                  delAllWatchHistory();
-                  videoDispatch({ type: "DELETE_ALL_HISTORY" });
-                  videoActionDispatch({
-                    type: "SET_SHOW_TOAST",
-                    payload: true,
-                  });
-                  videoActionDispatch({
-                    type: "SET_TOAST_TYPE",
-                    payload: "alert-warning",
-                  });
-                  videoActionDispatch({
-                    type: "SET_TOAST_MESSAGE",
-                    payload: "History cleared",
-                  });
+                  dispatch(removeAllFromWatchHistory(encodedToken));
+                  dispatch(
+                    setToast({
+                      showToast: true,
+                      type: "alert-warning",
+                      message: "History cleared",
+                    })
+                  );
                 }}
               >
                 <i className="fal fa-trash-alt"></i>Clear all watch history
@@ -47,9 +42,9 @@ export const History = () => {
               <></>
             )}
           </div>
-          {videoState?.watchHistory?.length > 0 ? (
+          {watchHistory?.length > 0 ? (
             <div className="video-list-container mt-1 flex-row g-1">
-              {videoState?.watchHistory?.map((video) => (
+              {watchHistory?.map((video) => (
                 <div
                   className="history-vd-container flex-row g-1"
                   key={video._id}
@@ -66,23 +61,19 @@ export const History = () => {
                     <i
                       className="far fa-times cursor-pointer"
                       onClick={() => {
-                        delVideoFromHistory(video._id);
-                        videoDispatch({
-                          type: "DELETE_FROM_HISTORY",
-                          payload: video._id,
-                        });
-                        videoActionDispatch({
-                          type: "SET_SHOW_TOAST",
-                          payload: true,
-                        });
-                        videoActionDispatch({
-                          type: "SET_TOAST_TYPE",
-                          payload: "alert-danger",
-                        });
-                        videoActionDispatch({
-                          type: "SET_TOAST_MESSAGE",
-                          payload: "Removed from history",
-                        });
+                        dispatch(
+                          removeFromWatchHistory({
+                            videoId: video._id,
+                            encodedToken,
+                          })
+                        );
+                        dispatch(
+                          setToast({
+                            showToast: true,
+                            type: "alert-danger",
+                            message: "Removed from history",
+                          })
+                        );
                       }}
                     ></i>
                   </div>

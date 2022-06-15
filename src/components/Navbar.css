@@ -63,3 +63,8 @@
 .header-actions a {
   color: var(--white);
 }
+@media only screen and (max-width: 450px) {
+  .search-bar {
+    display: none;
+  }
+}

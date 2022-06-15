@@ -4,24 +4,19 @@ import "./index.css";
 import App from "./App";
 import { makeServer } from "./server";
 import { BrowserRouter } from "react-router-dom";
-import { VideoContextProvider } from "./context/VideoContext";
-import { AuthContextProvider } from "./context/AuthContext";
-import { VideoActionProvider } from "./context/VideoActionContext";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 // Call make Server
 makeServer();
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthContextProvider>
-        <VideoContextProvider>
-          <VideoActionProvider>
-            <App />
-          </VideoActionProvider>
-        </VideoContextProvider>
-      </AuthContextProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

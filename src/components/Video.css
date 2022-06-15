@@ -37,3 +37,22 @@
 .playlist-video-text {
   flex: 5;
 }
+@media only screen and (max-width: 450px) {
+  .history-vd-container img {
+    width: 46%;
+  }
+  .history-vd-del-btn {
+    flex: 0 1;
+  }
+  .playlist-video-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    padding: 0;
+  }
+  .video-block {
+    margin: 0 auto;
+  }
+}

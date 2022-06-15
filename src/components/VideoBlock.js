@@ -1,20 +1,19 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useVideo } from "../context/VideoContext";
+import { setSelectedVideo } from "../store/slices/actionSlice";
 import { ActionMenu } from "./ActionMenu";
 
 export const VideoBlock = ({ video }) => {
+  const dispatch = useDispatch();
   const [showActionMenu, setShowActionMenu] = useState(false);
   const { thumbnail, title, views, creator, published_on } = video;
-  const { videoDispatch, videoState } = useVideo();
   let navigate = useNavigate();
   return (
     <>
       <div
         className="video-container cursor-pointer"
-        onClick={() =>
-          videoDispatch({ type: "SELECTED_VIDEO", payload: video })
-        }
+        onClick={() => dispatch(setSelectedVideo(video))}
       >
         <img
           src={thumbnail}

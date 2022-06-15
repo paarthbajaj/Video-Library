@@ -1,20 +1,20 @@
 import { useEffect } from "react";
-import { useVideoAction } from "../context/VideoActionContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setToast } from "../store/slices/actionSlice";
 
 export const Toast = () => {
-  const { videoActionState, videoActionDispatch } = useVideoAction();
+  const dispatch = useDispatch();
+  const { toast } = useSelector((state) => state.actions);
   useEffect(() => {
     setTimeout(() => {
-      videoActionDispatch({ type: "SET_SHOW_TOAST", payload: false });
+      dispatch(setToast({ showToast: false, type: "", message: "" }));
     }, 2000);
-  }, [videoActionState.toast.showToast]);
+  }, [toast.showToast]);
   return (
     <>
-      {videoActionState.toast?.showToast && (
+      {toast?.showToast && (
         <div className="vl-toast">
-          <div className={`alert m-radius ${videoActionState.toast.type}`}>
-            {videoActionState.toast.message}
-          </div>
+          <div className={`alert m-radius ${toast.type}`}>{toast.message}</div>
         </div>
       )}
     </>

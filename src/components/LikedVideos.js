@@ -1,23 +1,27 @@
 import { useEffect } from "react";
-import { useVideo } from "../context/VideoContext";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLikedVideos } from "../store/thunks/videoThunk";
 import { Sidebar } from "./Sidebar";
 import { VideoBlock } from "./VideoBlock";
 
 export const LikedVideos = () => {
-  const { getLikedVideos, videoState } = useVideo();
+  const encodedToken = localStorage.getItem("key");
+  const dispatch = useDispatch();
+  const { likedVideos } = useSelector((state) => state.videos);
   useEffect(() => {
-    getLikedVideos();
+    dispatch(fetchLikedVideos(encodedToken));
   }, []);
   return (
     <div className="app-body">
       <Sidebar />
       <div className="vl-page-container">
         <h1 className="txt-3">Liked Videos</h1>
-        {videoState?.likedVideos?.length > 0 ? (
+        {likedVideos?.length > 0 ? (
           <div className="video-list-container mt-1 flex-row g-1">
-            {videoState?.likedVideos?.map((video) => (
-              <VideoBlock video={video} key={video._id} />
-            ))}
+            {likedVideos &&
+              likedVideos?.map((video) => (
+                <VideoBlock video={video} key={video._id} />
+              ))}
           </div>
         ) : (
           <div className="empty-list txt-4">

@@ -1,12 +1,15 @@
 import { VideoBlock } from "./VideoBlock";
 import { Sidebar } from "./Sidebar";
-import { useVideo } from "../context/VideoContext";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchWatchLaterList } from "../store/thunks/videoThunk";
 
 export const WatchLater = () => {
-  const { getWatchLaterApi, videoState } = useVideo();
+  const encodedToken = localStorage.getItem("key");
+  const dispatch = useDispatch();
+  const { watchLaterList } = useSelector((state) => state.videos);
   useEffect(() => {
-    getWatchLaterApi();
+    dispatch(fetchWatchLaterList(encodedToken));
   }, []);
   return (
     <>
@@ -14,11 +17,10 @@ export const WatchLater = () => {
         <Sidebar />
         <div className="vl-page-container">
           <h1 className="txt-3">Watch Later</h1>
-          {videoState?.watchLaterList?.length > 0 ? (
+          {watchLaterList && watchLaterList?.length > 0 ? (
             <div className="video-list-container mt-1 flex-row g-1">
-              {videoState?.watchLaterList?.map((video) => (
-                <VideoBlock video={video} />
-              ))}
+              {watchLaterList &&
+                watchLaterList?.map((video) => <VideoBlock video={video} />)}
             </div>
           ) : (
             <div className="empty-list txt-3">No videos in watch later</div>

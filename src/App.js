@@ -1,5 +1,4 @@
 import "./App.css";
-import logo from "./logo.png";
 import { Routes, Route, Link } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { Navbar } from "./components/Navbar";

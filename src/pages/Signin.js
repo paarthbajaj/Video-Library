@@ -1,8 +1,13 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setToast } from "../store/slices/actionSlice";
+import { setEmail, setPassword } from "../store/slices/authSlice";
+import { signInAsGuest, signinClickHandler } from "../store/thunks/authThunk";
 import "./Auth.css";
 export const Signin = () => {
-  const { signInAsGuest, signinClickHandler } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { email, password } = useSelector((state) => state.auth);
   return (
     <div className="signin-page">
       <img
@@ -14,37 +19,51 @@ export const Signin = () => {
       <form className="auth-form flex-column g-1 align-center justify-center">
         <label className="log-input">
           <input
-            className="input log-input req-input"
+            className="input log-input"
             type="email"
             placeholder="Email"
             required
+            onChange={(e) => dispatch(setEmail(e.target.value))}
           />
           <span className="error">Please enter your email</span>
         </label>
         <label className="log-input">
           <input
-            className="input log-input req-input"
+            className="input log-input"
             type="password"
             placeholder="Password"
             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
+            onChange={(e) => dispatch(setPassword(e.target.value))}
           />
           <span className="error">
             Password must contain eight characters, at least one letter, one
             number and one special character
           </span>
         </label>
+        <button
+          className="vl-pri-btn"
+          type="submit"
+          onClick={(e) => {
+            e.preventDefault();
+            email !== "" || password !== ""
+              ? dispatch(signinClickHandler({ email, password, navigate }))
+              : dispatch(
+                  setToast({
+                    showToast: true,
+                    type: "alert-danger",
+                    message: "Please fill all the fields",
+                  })
+                );
+          }}
+        >
+          Sign In
+        </button>
         <Link to="/home">
-          <button
-            className="vl-pri-btn"
-            type="submit"
-            onClick={signinClickHandler}
+          <span
+            className="cursor-pointer"
+            onClick={() => dispatch(signInAsGuest())}
           >
-            Sign In
-          </button>
-        </Link>
-        <Link to="/home">
-          <span className="cursor-pointer" onClick={signInAsGuest}>
             Sign In As Guest
           </span>
         </Link>

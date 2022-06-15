@@ -1,16 +1,18 @@
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPlaylistPopupState, setToast } from "../store/slices/actionSlice";
 import {
+  fetchWatchLaterList,
   addToWatchLater,
   removeFromWatchLater,
-} from "../backend/utils/serviceUtil";
-import { useVideoAction } from "../context/VideoActionContext";
-import { useVideo } from "../context/VideoContext";
+} from "../store/thunks/videoThunk";
 
 export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
-  const { videoState, videoDispatch, getWatchLaterApi } = useVideo();
-  const { videoActionDispatch, videoActionState } = useVideoAction();
+  const encodedToken = localStorage.getItem("key");
+  const dispatch = useDispatch();
+  const { watchLaterList } = useSelector((state) => state.videos);
   useEffect(() => {
-    getWatchLaterApi();
+    dispatch(fetchWatchLaterList(encodedToken));
   }, [showActionMenu]);
   return (
     <div className="action-menu cursor-pointer">
@@ -22,20 +24,21 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
       ></i>
       {showActionMenu && (
         <div className="action-menu-options">
-          {videoState?.watchLaterList?.map((i) => i._id).includes(video._id) ? (
+          {watchLaterList &&
+          watchLaterList?.map((i) => i._id).includes(video._id) ? (
             <div
               onClick={() => {
                 setShowActionMenu(false);
-                removeFromWatchLater(video._id);
-                videoActionDispatch({ type: "SET_SHOW_TOAST", payload: true });
-                videoActionDispatch({
-                  type: "SET_TOAST_TYPE",
-                  payload: "alert-danger",
-                });
-                videoActionDispatch({
-                  type: "SET_TOAST_MESSAGE",
-                  payload: "Removed from watch later",
-                });
+                dispatch(
+                  removeFromWatchLater({ videoId: video._id, encodedToken })
+                );
+                dispatch(
+                  setToast({
+                    showToast: true,
+                    type: "alert-danger",
+                    message: "Removed from watch later",
+                  })
+                );
               }}
               className="action-option-block"
             >
@@ -46,16 +49,14 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
             <div
               onClick={() => {
                 setShowActionMenu(false);
-                addToWatchLater(video);
-                videoActionDispatch({ type: "SET_SHOW_TOAST", payload: true });
-                videoActionDispatch({
-                  type: "SET_TOAST_TYPE",
-                  payload: "alert-success",
-                });
-                videoActionDispatch({
-                  type: "SET_TOAST_MESSAGE",
-                  payload: "Added to watch later",
-                });
+                dispatch(addToWatchLater({ video, encodedToken }));
+                dispatch(
+                  setToast({
+                    showToast: true,
+                    type: "alert-success",
+                    message: "Added to watch later",
+                  })
+                );
               }}
               className="action-option-block"
             >
@@ -67,7 +68,7 @@ export const ActionMenu = ({ setShowActionMenu, showActionMenu, video }) => {
           <div
             onClick={() => {
               setShowActionMenu(false);
-              videoDispatch({ type: "SHOW_PLAYLIST_POPUP" });
+              dispatch(setPlaylistPopupState(true));
             }}
             className="action-option-block"
           >

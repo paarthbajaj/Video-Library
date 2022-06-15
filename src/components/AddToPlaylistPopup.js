@@ -1,48 +1,47 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  addToPlaylist,
+  setCreatePlaylistBlockState,
+  setPlaylistPopupState,
+  setToast,
+} from "../store/slices/actionSlice";
+import {
+  fetchPlaylists,
   addVideoToPlaylist,
-  deleteVideoFromPlaylist,
-} from "../backend/utils/serviceUtil";
-import { useVideoAction } from "../context/VideoActionContext";
-import { useVideo } from "../context/VideoContext";
+  removeVideoFromPlaylist,
+  createPlaylist,
+} from "../store/thunks/videoThunk";
 
 export const PlaylistPopup = (video) => {
-  const { videoDispatch, videoState, getPlaylists } = useVideo();
-  const { videoActionDispatch, videoActionState } = useVideoAction();
+  const encodedToken = localStorage.getItem("key");
+  const dispatch = useDispatch();
+  const { listOfPlaylist } = useSelector((state) => state.videos);
+  const { selectedVideo, showCreatePlaylistBlock } = useSelector(
+    (state) => state.actions
+  );
   const [playlistName, setPlaylistName] = useState("");
   useEffect(() => {
-    getPlaylists();
-  }, [videoActionState.toast.showToast]);
+    dispatch(fetchPlaylists(encodedToken));
+  }, []);
   const deleteFromPlaylist = (playlistId, videoId) => {
-    deleteVideoFromPlaylist(playlistId, videoId);
-    videoActionDispatch({
-      type: "SET_SHOW_TOAST",
-      payload: true,
-    });
-    videoActionDispatch({
-      type: "SET_TOAST_TYPE",
-      payload: "alert-danger",
-    });
-    videoActionDispatch({
-      type: "SET_TOAST_MESSAGE",
-      payload: "Removed from playlist",
-    });
+    dispatch(removeVideoFromPlaylist({ playlistId, videoId, encodedToken }));
+    dispatch(
+      setToast({
+        showToast: true,
+        type: "alert-danger",
+        message: "Removed from playlist",
+      })
+    );
   };
-  const addToPlaylistFunc = (playlistId, videoId) => {
-    addVideoToPlaylist(playlistId, videoId);
-    videoActionDispatch({
-      type: "SET_SHOW_TOAST",
-      payload: true,
-    });
-    videoActionDispatch({
-      type: "SET_TOAST_TYPE",
-      payload: "alert-success",
-    });
-    videoActionDispatch({
-      type: "SET_TOAST_MESSAGE",
-      payload: "Added to playlist",
-    });
+  const addToPlaylistFunc = (playlistId, videoObj) => {
+    dispatch(addVideoToPlaylist({ playlistId, videoObj, encodedToken }));
+    dispatch(
+      setToast({
+        showToast: true,
+        type: "alert-success",
+        message: "Added to playlist",
+      })
+    );
   };
   return (
     <>
@@ -52,37 +51,33 @@ export const PlaylistPopup = (video) => {
             <span className="grow-1">Save to...</span>
             <span
               className="cursor-pointer popup-close-icon"
-              onClick={() => videoDispatch({ type: "CLOSE_PLAYLIST_POPUP" })}
+              onClick={() => dispatch(setPlaylistPopupState(false))}
             >
               <i className="far fa-times"></i>
             </span>
           </div>
           <div className="list-playlist-block">
-            {videoState?.listOfPlaylist?.map((i) => (
-              <div className="list-playlist" key={i._id}>
-                <label className="cursor-pointer">
-                  <input
-                    type="checkbox"
-                    onInput={() => {
-                      i.videos.some(
-                        (e) => e._id == videoState.selectedVideo._id
-                      )
-                        ? deleteFromPlaylist(
-                            i._id,
-                            videoState.selectedVideo._id
-                          )
-                        : addToPlaylistFunc(i._id, videoState.selectedVideo);
-                    }}
-                    defaultChecked={i.videos.some(
-                      (e) => e._id == videoState.selectedVideo._id
-                    )}
-                  />
-                  {i.title}
-                </label>
-              </div>
-            ))}
+            {listOfPlaylist &&
+              listOfPlaylist?.map((i) => (
+                <div className="list-playlist" key={i._id}>
+                  <label className="cursor-pointer">
+                    <input
+                      type="checkbox"
+                      onInput={() => {
+                        i.videos.some((e) => e._id == selectedVideo._id)
+                          ? deleteFromPlaylist(i._id, selectedVideo._id)
+                          : addToPlaylistFunc(i._id, selectedVideo);
+                      }}
+                      defaultChecked={i.videos.some(
+                        (e) => e._id == selectedVideo._id
+                      )}
+                    />
+                    {i.title}
+                  </label>
+                </div>
+              ))}
           </div>
-          {videoState.showCreatePlaylistBlock && (
+          {showCreatePlaylistBlock && (
             <div className="flex-column">
               <label className="flex-column mt-5">
                 {" "}
@@ -98,33 +93,32 @@ export const PlaylistPopup = (video) => {
               <button
                 className="vl-pri-btn mt-5"
                 onClick={() => {
-                  videoDispatch({ type: "HIDE_CREATE_PLAYLIST_BLOCK" });
-                  videoDispatch({ type: "CLOSE_PLAYLIST_POPUP" });
-                  addToPlaylist(playlistName, videoState.selectedVideo);
-                  videoActionDispatch({
-                    type: "SET_SHOW_TOAST",
-                    payload: true,
-                  });
-                  videoActionDispatch({
-                    type: "SET_TOAST_TYPE",
-                    payload: "alert-success",
-                  });
-                  videoActionDispatch({
-                    type: "SET_TOAST_MESSAGE",
-                    payload: "Playlist created",
-                  });
+                  dispatch(setCreatePlaylistBlockState(false));
+                  dispatch(setPlaylistPopupState(false));
+                  dispatch(
+                    createPlaylist({
+                      playlistName,
+                      selectedVideo,
+                      encodedToken,
+                    })
+                  );
+                  dispatch(
+                    setToast({
+                      showToast: true,
+                      type: "alert-success",
+                      message: "Playlist created",
+                    })
+                  );
                 }}
               >
                 Create
               </button>
             </div>
           )}
-          {!videoState.showCreatePlaylistBlock && (
+          {!showCreatePlaylistBlock && (
             <div
               className="popup-footer cursor-pointer"
-              onClick={() =>
-                videoDispatch({ type: "SHOW_CREATE_PLAYLIST_BLOCK" })
-              }
+              onClick={() => dispatch(setCreatePlaylistBlockState(true))}
             >
               <i className="far fa-plus mr-1"></i>
               <span>Create a new playlist</span>

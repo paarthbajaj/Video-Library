@@ -9,6 +9,9 @@ import {
 } from "../store/slices/authSlice";
 import { signupClickHandler } from "../store/thunks/authThunk";
 import "./Auth.css";
+
+const emailValidation =
+  /[_A-Za-z0-9\-+]+(\.[_A-Za-z0-9\-]+)*@[A-Za-z0-9\-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,3})/;
 export const Signup = () => {
   const dispatch = useDispatch();
   const { name, email, password, confirm_password } = useSelector(
@@ -49,7 +52,6 @@ export const Signup = () => {
             className="input log-input"
             type="password"
             placeholder="Password"
-            pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
             onChange={(e) => dispatch(setPassword(e.target.value))}
           />
@@ -63,7 +65,6 @@ export const Signup = () => {
             className="input log-input"
             type="password"
             placeholder="Confirm Password"
-            pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             required
             onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
           />
@@ -77,26 +78,58 @@ export const Signup = () => {
           type="submit"
           onClick={(e) => {
             e.preventDefault();
-            name !== "" ||
-            email !== "" ||
-            password !== "" ||
-            confirm_password !== ""
-              ? dispatch(
-                  signupClickHandler({
-                    name,
-                    email,
-                    password,
-                    confirm_password,
-                    navigate,
-                  })
-                )
-              : dispatch(
-                  setToast({
-                    showToast: true,
-                    type: "alert-danger",
-                    message: "Please fill all the fields",
-                  })
-                );
+            if (
+              name == "" ||
+              email == "" ||
+              password == "" ||
+              confirm_password == ""
+            )
+              dispatch(
+                setToast({
+                  showToast: true,
+                  type: "alert-danger",
+                  message: "Please fill the fields",
+                })
+              );
+            else if (!emailValidation.test(email))
+              dispatch(
+                setToast({
+                  showToast: true,
+                  type: "alert-danger",
+                  message: "Please enter the valid email",
+                })
+              );
+            else if (password.length < 7)
+              dispatch(
+                setToast({
+                  showToast: true,
+                  type: "alert-danger",
+                  message: "Password must of 8 or more characters",
+                })
+              );
+            else if (password !== confirm_password)
+              dispatch(
+                setToast({
+                  showToast: true,
+                  type: "alert-danger",
+                  message: "Passwords must be same",
+                })
+              );
+            else if (
+              name !== "" ||
+              email !== "" ||
+              password !== "" ||
+              confirm_password !== ""
+            )
+              dispatch(
+                signupClickHandler({
+                  name,
+                  email,
+                  password,
+                  confirm_password,
+                  navigate,
+                })
+              );
           }}
         >
           Sign Up

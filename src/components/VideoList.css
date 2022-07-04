@@ -190,12 +190,8 @@
     display: flex;
     flex-direction: column;
   }
-  /*.channel-thumbnail {
-    max-width: 1.7rem;
-    min-width: 1.7rem;
+  .category-list {
+    overflow: auto;
+    white-space: nowrap;
   }
-  .video-age,
-  .video-views {
-    font-size: 0.6rem;
-  } */
 }
